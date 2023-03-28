@@ -28,6 +28,8 @@ _description:
 _install:
     bit 0, (iy + $34) ; check if the hook is installed
     ret nz
+    call ti.ClrScrn
+    call ti.HomeUp
     ld hl, appvarName
     call ti.Mov9ToOP1
     call ti.ChkFindSym
