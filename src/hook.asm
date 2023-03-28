@@ -44,20 +44,20 @@ _additionEdition:
     cp a, b
     jr z, _allowKey
     ld hl, $f0202c
-	ld (hl), l
-	ld l, h
-	bit 0, (hl) ; on button removes the hook
+    ld (hl), l
+    ld l, h
+    bit 0, (hl) ; on button removes the hook
     jr nz, _removeAddition
-    or a, a
-    ld a, 0 ; DO NOT ALLOW THIS KEY
+    xor a, a  ; DO NOT ALLOW THIS KEY
+    or a, 1
     ret
 
 _allowKey:
-    or a, a
+    or a, 1
     ret
 
 _removeAddition:
     call ti.ClrGetKeyHook ; who cares about chaining >:)
-    or a, a
-    ld a, 0
+    xor a, a
+    or a, 1
     ret

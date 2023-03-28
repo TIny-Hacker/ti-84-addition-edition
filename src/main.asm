@@ -27,13 +27,13 @@ _description:
 	db	"Channel the inner power of addition", 0
 _install:
     bit 0, (iy + $34) ; check if the hook is installed
-    ret nz
+    jr nz, _failedHook
     call ti.ClrScrn
     call ti.HomeUp
     ld hl, appvarName
     call ti.Mov9ToOP1
     call ti.ChkFindSym
-    jr c, _failed
+    jr c, _failedNotFound
     call ti.ChkInRam
     call z, _notInRAM
     ld hl, 10
@@ -54,20 +54,28 @@ _notInRAM: ; hooks in RAM are very not safe
     call ti.ChkFindSym
     ret
 
-_failed:
+_failedHook:
+    ld hl, hookInstalledStr
+    call ti.PutS
+    jr _wait
+
+_failedNotFound:
     ld hl, notFoundStr
     call ti.PutS
 
-.wait:
+_wait:
     call ti.GetCSC
     cp a, ti.skClear
     ret z
     cp a, ti.skEnter
     ret z
-    jr .wait
+    jr _wait
 
 notFoundStr:
     db "Error: ApEdHook AppVar    does not exist on the     calcuator.", 0
+
+hookInstalledStr:
+    db "Error: A GetCSC hook is   already installed.", 0
 
 appvarName:
     db ti.AppVarObj, "AdEdHook", 0
