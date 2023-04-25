@@ -72,7 +72,7 @@ _wait:
     jr _wait
 
 notFoundStr:
-    db "Error: ApEdHook AppVar    does not exist on the     calcuator.", 0
+    db "Error: AdEdHook AppVar    does not exist on the     calcuator.", 0
 
 hookInstalledStr:
     db "Error: A GetCSC hook is   already installed.", 0
