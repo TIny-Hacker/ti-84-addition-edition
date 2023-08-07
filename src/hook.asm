@@ -1,63 +1,46 @@
+;-----------------------------------------------
+;
+; TI-84 Addition Edition Source Code - hook.asm
+; By RoccoLox Programs and TIny_Hacker
+; Copyright 2023
+; License: GPL-3.0
+; Last Built: August 4, 2023
+;
+;-----------------------------------------------
+
 include 'include/ez80.inc'
 include 'include/tiformat.inc'
 format ti archived appvar 'AdEdHook'
 include 'include/ti84pceg.inc'
 
-_additionEdition:
+hookBackUp := ti.appData + 253
+
+additionEdition:
     db $83
-    cp a, $1b ; make sure a key has been pressed
-    ret nz
-    ld a, ti.sk0 ; there has got to be a better way to do these keys but I'm too lazy to figure it out for a joke program
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk1
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk2
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk3
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk4
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk5 ; I'm sure that there's something better
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk6
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk7
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk8 ; please enlighten me
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.sk9
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.skAdd ; nevermind this works so who cares
-    cp a, b
-    jr z, _allowKey
-    ld a, ti.skEnter
-    cp a, b
-    jr z, _allowKey
-    ld hl, $f0202c
-    ld (hl), l
-    ld l, h
-    bit 0, (hl) ; on button removes the hook
-    jr nz, _removeAddition
-    xor a, a  ; DO NOT ALLOW THIS KEY
+    ld b, a
+    cp a, ti.kClear
+    jr z, removeAddition
+    cp a, ti.kAdd
+    jr z, allowKey
+    cp a, ti.kEnter
+    jr z, allowKey
+    cp a, ti.k0
+    jr c, return
+    cp a, ti.k9 + 1
+    jr nc, return
+
+allowKey:
     or a, 1
+    ld a, b
     ret
 
-_allowKey:
-    or a, 1
-    ret
+removeAddition:
+    call ti.ClrRawKeyHook
+    ld hl, (hookBackUp)
+    call ti.ChkHLIs0
+    call nz, ti.SetGetKeyHook
+    jr allowKey
 
-_removeAddition:
-    call ti.ClrGetKeyHook ; who cares about chaining >:)
+return:
     xor a, a
-    or a, 1
     ret
