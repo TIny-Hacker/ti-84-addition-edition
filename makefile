@@ -2,7 +2,7 @@
 #
 # TI-84 Addition Edition Source Code - makefile
 # By RoccoLox Programs and TIny_Hacker
-# Copyright 2023
+# Copyright 2023 - 2024
 # License: GPL-3.0
 # Last Built: August 4, 2023
 #
